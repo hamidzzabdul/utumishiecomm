@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ShoppingCart, MessageCircle } from "lucide-react";
 import { useProductBySlug } from "../hooks/useProduct";
+import { useCart } from "../context/CartContext";
+import toast from "react-hot-toast";
 
 function ProductDetailsPage() {
+  const { addToCart } = useCart();
   const { productSlug } = useParams();
   const { data: product, isLoading, error } = useProductBySlug(productSlug);
   const [quantity, setQuantity] = useState(1);
@@ -32,6 +35,15 @@ function ProductDetailsPage() {
     return (
       <p className="text-gray-600 text-center mt-10">Product not found.</p>
     );
+
+  const handleAddToCart = (product) => {
+    if (product.stock_status === "instock") {
+      toast.success("Added to cart!");
+      addToCart(product);
+    } else {
+      toast.error("Product is out of stock!");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-6 px-3 md:px-6">
@@ -147,7 +159,10 @@ function ProductDetailsPage() {
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-3">
-                <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 cursor-pointer">
+                <button
+                  onClick={() => handleAddToCart(product)}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                >
                   Add to Cart
                   <ShoppingCart size={18} />
                 </button>

@@ -28,14 +28,20 @@ function Navbar() {
   return (
     <div className="w-full flex flex-col sticky top-0 z-50 ">
       {/* Top Info Bar */}
-      <div className="w-full max-w-350 py-2 m-auto bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600 flex items-center justify-center gap-3 text-sm">
-        <p className="text-white font-semibold tracking-widest">0706 328 544</p>
-        <span className="text-lg font-bold text-white">|</span>
-        <p className="text-white font-semibold tracking-widest">0706 328 544</p>
-        <span className="text-lg font-bold text-white">|</span>
-        <p className="text-white font-semibold tracking-widest">
-          info@utumishicomputer.co.ke
-        </p>
+      <div className="w-full py-2 m-auto bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600 flex items-center justify-center gap-3 text-sm">
+        <div className="w-full max-w-350 py-2 m-auto flex items-center justify-center gap-3 text-sm">
+          <p className="text-white font-semibold tracking-widest">
+            0706 328 544
+          </p>
+          <span className="text-lg font-bold text-white">|</span>
+          <p className="text-white font-semibold tracking-widest">
+            0706 328 544
+          </p>
+          <span className="text-lg font-bold text-white">|</span>
+          <p className="text-white font-semibold tracking-widest">
+            info@utumishicomputer.co.ke
+          </p>
+        </div>
       </div>
 
       {/* Main Navbar */}
@@ -109,8 +115,10 @@ function Navbar() {
       </div>
 
       {/* Categories */}
-      <div className="w-full mx-auto max-w-350 bg-white pb-3">
-        <Categories />
+      <div className="w-full bg-white ">
+        <div className="w-full mx-auto max-w-350 bg-white pb-3">
+          <Categories />
+        </div>
       </div>
     </div>
   );

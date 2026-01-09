@@ -76,12 +76,12 @@ function CategorySlider({ category }) {
                   <ProductSkeleton />
                 </SwiperSlide>
               ))
-            : products.map((product, index) => {
+            : products.map((product) => {
                 const isInWishlist = wishlist.some(
                   (item) => item.id === product.id
                 );
-                const category_slug =
-                  product?.categories?.[0]?.slug || "uncategorized";
+                const categoryName =
+                  product?.categories?.[0].name || "uncategorized";
 
                 return (
                   <SwiperSlide
@@ -127,7 +127,7 @@ function CategorySlider({ category }) {
                     <NavLink to={`/shop/product/${product.slug}`}>
                       <div className="p-2 flex flex-col gap-1">
                         <span className="text-gray-600 font-semibold">
-                          SKU 00{index + 1}
+                          {categoryName}
                         </span>
                         <p className="text-sm h-10 overflow-hidden">
                           {truncate(product.name, 40)}

@@ -5,6 +5,10 @@ import ShopPage from "./Pages/ShopPage";
 import ProductDetailsPage from "./Pages/ProductDetailsPage";
 import CartPage from "./Components/Cart";
 import WishlistPage from "./Components/Wishlist";
+import AboutUs from "./Pages/AboutPage";
+import ContactUs from "./Pages/ContactPage";
+import TermsAndConditions from "./Pages/TermsAndConditions";
+import PrivacyPolicy from "./Pages/PrivacyPolicy";
 
 const Router = createBrowserRouter([
   {
@@ -37,11 +41,19 @@ const Router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <div>About Page</div>,
+        element: <AboutUs />,
       },
       {
         path: "/contact",
-        element: <div>Contact Page</div>,
+        element: <ContactUs />,
+      },
+      {
+        path: "/terms",
+        element: <TermsAndConditions />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
       },
       {
         path: "*",

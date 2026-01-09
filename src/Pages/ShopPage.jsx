@@ -1,15 +1,20 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
+
 import ProductCard from "../Components/ProductCard";
 import SidebarFilters from "../Components/SidebarFilter";
-import { useProducts } from "../hooks/useProduct";
 import ProductSkeleton from "../Components/ProductSkeleton";
 import EmptyProductsState from "../Components/EmptyProductsState";
-import { useSearchParams } from "react-router-dom";
 
-// Helper function to convert price range selections to min/max values
+import { useProducts } from "../hooks/useProduct";
+import { useCategories } from "../hooks/useCategories";
+
+/* ---------------------------------------
+   PRICE RANGE HELPER
+---------------------------------------- */
 const getPriceParams = (selectedPrices) => {
-  if (selectedPrices.length === 0) return {};
+  if (!selectedPrices.length) return {};
 
   const ranges = {
     under50k: { min: 0, max: 50000 },
@@ -18,22 +23,28 @@ const getPriceParams = (selectedPrices) => {
     over200k: { min: 200000, max: 999999999 },
   };
 
-  let minPrice = Infinity;
-  let maxPrice = 0;
+  let min = Infinity;
+  let max = 0;
 
-  selectedPrices.forEach((range) => {
-    const { min, max } = ranges[range];
-    minPrice = Math.min(minPrice, min);
-    maxPrice = Math.max(maxPrice, max);
+  selectedPrices.forEach((key) => {
+    const range = ranges[key];
+    if (!range) return;
+    min = Math.min(min, range.min);
+    max = Math.max(max, range.max);
   });
 
-  return {
-    min_price: minPrice,
-    max_price: maxPrice,
-  };
+  return { min_price: min, max_price: max };
 };
 
+/* ---------------------------------------
+   SHOP PAGE
+---------------------------------------- */
 function ShopPage() {
+  const { categorySlug } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const search = searchParams.get("search");
+
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
 
@@ -41,13 +52,57 @@ function ShopPage() {
   const [selectedPrices, setSelectedPrices] = useState([]);
   const [inStockOnly, setInStockOnly] = useState(false);
 
-  // search params
-  const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get("search");
+  /* ---------------------------------------
+     FETCH CATEGORIES (for slug → ID mapping)
+  ---------------------------------------- */
+  const { data: categories } = useCategories();
 
-  // Reset to page 1 whenever filters change
+  /* ---------------------------------------
+     HANDLE CATEGORY SLUG FROM URL
+  ---------------------------------------- */
+  useEffect(() => {
+    if (!categorySlug || !categories) return;
+
+    const slug = categorySlug.replace(/-/g, " ").toLowerCase();
+
+    const matchedCategory = categories.find(
+      (cat) => cat.name.toLowerCase() === slug
+    );
+
+    if (matchedCategory) {
+      setSelectedCategories([matchedCategory]);
+      setCurrentPage(1);
+    }
+  }, [categorySlug, categories]);
+
+  /* ---------------------------------------
+     RESET PAGE ON FILTER CHANGE
+  ---------------------------------------- */
   useEffect(() => {
     setCurrentPage(1);
+  }, [selectedCategories, selectedPrices, inStockOnly, search]);
+
+  /* ---------------------------------------
+     SYNC FILTERS TO URL (QUERY STRING)
+  ---------------------------------------- */
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (search) params.set("search", search);
+
+    if (selectedCategories.length) {
+      params.set("categories", selectedCategories.map((c) => c.id).join(","));
+    }
+
+    if (selectedPrices.length) {
+      params.set("prices", selectedPrices.join(","));
+    }
+
+    if (inStockOnly) params.set("instock", "true");
+
+    if (params.toString() !== searchParams.toString()) {
+      setSearchParams(params, { replace: true });
+    }
   }, [
     selectedCategories,
     selectedPrices,
@@ -57,40 +112,12 @@ function ShopPage() {
     setSearchParams,
   ]);
 
-  // Update URL with all active filters (preserving search)
-  useEffect(() => {
-    const params = new URLSearchParams();
-
-    // Keep search in URL if it exists
-    if (search) {
-      params.set("search", search);
-    }
-
-    // Add categories to URL
-    if (selectedCategories.length > 0) {
-      params.set("categories", selectedCategories.map((c) => c.id).join(","));
-    }
-
-    // Add prices to URL
-    if (selectedPrices.length > 0) {
-      params.set("prices", selectedPrices.join(","));
-    }
-
-    // Add stock status to URL
-    if (inStockOnly) {
-      params.set("instock", "true");
-    }
-
-    // Only update if params changed
-    if (params.toString() !== searchParams.toString()) {
-      setSearchParams(params, { replace: true });
-    }
-  }, [selectedCategories, selectedPrices, inStockOnly, search]);
-
-  // Fetch products - remove search from API call, we'll filter client-side
+  /* ---------------------------------------
+     FETCH PRODUCTS (SERVER FILTERS)
+  ---------------------------------------- */
   const { data, isLoading } = useProducts({
-    per_page: 100, // Get more products to filter from
-    page: 1, // Always get first page, we'll handle pagination client-side
+    per_page: 100,
+    page: 1,
     category:
       selectedCategories.length > 0
         ? selectedCategories.map((c) => c.id).join(",")
@@ -99,58 +126,46 @@ function ShopPage() {
     ...getPriceParams(selectedPrices),
   });
 
-  const allProducts = data?.products || [];
+  const allProducts = useMemo(() => data?.products || [], [data]);
 
-  // CLIENT-SIDE FILTERING AND SEARCH (Search ONLY product names)
+  /* ---------------------------------------
+     CLIENT-SIDE SEARCH (NAME ONLY)
+  ---------------------------------------- */
   const filteredProducts = useMemo(() => {
-    let filtered = [...allProducts];
+    let result = [...allProducts];
 
-    // Apply search filter if search term exists - ONLY SEARCH NAMES
-    if (search && search.trim()) {
-      const searchLower = search.toLowerCase().trim();
+    if (search?.trim()) {
+      const term = search.toLowerCase().trim();
 
-      filtered = filtered.filter((product) => {
-        const nameLower = product.name.toLowerCase();
+      result = result.filter((p) => p.name.toLowerCase().includes(term));
 
-        // ONLY check product name for the search term
-        return nameLower.includes(searchLower);
-      });
+      result.sort((a, b) => {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
 
-      // Sort by relevance (exact matches first)
-      filtered.sort((a, b) => {
-        const aNameLower = a.name.toLowerCase();
-        const bNameLower = b.name.toLowerCase();
+        if (aName === term && bName !== term) return -1;
+        if (bName === term && aName !== term) return 1;
 
-        // Exact match in name gets priority
-        const aExactMatch = aNameLower === searchLower;
-        const bExactMatch = bNameLower === searchLower;
-
-        if (aExactMatch && !bExactMatch) return -1;
-        if (!aExactMatch && bExactMatch) return 1;
-
-        // Name starts with search term gets second priority
-        const aStartsWith = aNameLower.startsWith(searchLower);
-        const bStartsWith = bNameLower.startsWith(searchLower);
-
-        if (aStartsWith && !bStartsWith) return -1;
-        if (!aStartsWith && bStartsWith) return 1;
+        if (aName.startsWith(term) && !bName.startsWith(term)) return -1;
+        if (bName.startsWith(term) && !aName.startsWith(term)) return 1;
 
         return 0;
       });
     }
 
-    return filtered;
+    return result;
   }, [allProducts, search]);
 
-  // CLIENT-SIDE PAGINATION
+  /* ---------------------------------------
+     PAGINATION
+  ---------------------------------------- */
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-  const startIndex = (currentPage - 1) * productsPerPage;
-  const endIndex = startIndex + productsPerPage;
-  const products = filteredProducts.slice(startIndex, endIndex);
+  const start = (currentPage - 1) * productsPerPage;
+  const products = filteredProducts.slice(start, start + productsPerPage);
 
-  const goToPage = (pageNumber) => {
-    if (pageNumber < 1 || pageNumber > totalPages) return;
-    setCurrentPage(pageNumber);
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -159,15 +174,16 @@ function ShopPage() {
     setSelectedPrices([]);
     setInStockOnly(false);
     setCurrentPage(1);
-
-    // Clear ALL filters from URL INCLUDING search
     setSearchParams({});
   };
 
+  /* ---------------------------------------
+     RENDER
+  ---------------------------------------- */
   return (
-    <div className="w-full mt-3 flex gap-3 relative">
-      {/* Sidebar */}
-      <div className="w-[20%] bg-white rounded-sm hidden md:block">
+    <div className="w-full max-w-350 mx-auto mt-3 flex gap-3">
+      {/* SIDEBAR */}
+      <div className="w-[20%] hidden md:block bg-white rounded-sm">
         <SidebarFilters
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
@@ -178,89 +194,41 @@ function ShopPage() {
         />
       </div>
 
-      {/* Products */}
+      {/* PRODUCTS */}
       <div className="w-full md:w-[80%] bg-white rounded-sm">
-        <div className="flex items-center justify-between px-3 py-2 bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600">
-          <h2 className="text-xl font-semibold text-white">
+        <div className="px-3 py-2 bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600 flex justify-between">
+          <h2 className="text-white text-xl font-semibold">
             {search ? `Search Results for "${search}"` : "Explore our Products"}
           </h2>
           {search && (
-            <span className="text-sm text-white">
-              {filteredProducts.length}{" "}
-              {filteredProducts.length === 1 ? "result" : "results"} found
+            <span className="text-white text-sm">
+              {filteredProducts.length} results
             </span>
           )}
         </div>
 
-        {/* Active Filters Display */}
-        {(search ||
-          selectedCategories.length > 0 ||
-          selectedPrices.length > 0 ||
-          inStockOnly) && (
-          <div className="p-3 border-b border-gray-200 flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-medium text-gray-600">
-              Active Filters:
-            </span>
-
-            {search && (
-              <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
-                Search: {search}
-              </span>
-            )}
-
-            {selectedCategories.map((cat) => (
-              <span
-                key={cat.id}
-                className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded"
-              >
-                {cat.name}
-              </span>
-            ))}
-
-            {selectedPrices.map((price) => (
-              <span
-                key={price}
-                className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded"
-              >
-                {price.replace(/([a-z])(\d)/g, "$1 $2").replace(/to/g, " to ")}
-              </span>
-            ))}
-
-            {inStockOnly && (
-              <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">
-                In Stock Only
-              </span>
-            )}
-
-            <button
-              onClick={handleReset}
-              className="ml-2 px-2 py-1 cursor-pointer text-xs text-red-600 hover:text-red-800 underline"
-            >
-              Clear All Filters
-            </button>
-          </div>
-        )}
-
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-2">
+        {/* PRODUCT GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-3">
           {isLoading ? (
-            <ProductSkeleton />
+            Array.from({ length: productsPerPage }).map((_, i) => (
+              <ProductSkeleton key={i} />
+            ))
           ) : products.length === 0 ? (
             <EmptyProductsState onReset={handleReset} />
           ) : (
-            products.map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index} />
+            products.map((p, i) => (
+              <ProductCard key={p.id} product={p} index={i} />
             ))
           )}
         </div>
 
-        {/* Pagination */}
+        {/* PAGINATION */}
         {totalPages > 1 && !isLoading && (
-          <div className="flex items-center justify-center gap-4 py-4 w-full">
+          <div className="flex justify-center gap-4 py-4">
             <button
-              className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
+              className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
             >
               Previous
             </button>
@@ -270,9 +238,9 @@ function ShopPage() {
             </span>
 
             <button
-              className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
+              className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
             >
               Next
             </button>

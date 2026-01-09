@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Trash2, MessageCircle, ShoppingBag, ArrowLeft } from "lucide-react";
 import { useCart } from "../context/CartContext";
-// import { useWishlist } from "../context/WishlistContext";
+import ConfirmationModal from "../Components/ConfirmationModal";
 
 function CartPage() {
   const { cart, removeFromCart, updateQuantity } = useCart();
+
+  // MODAL STATE
+  const [modalOpen, setModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   // Subtotal, shipping, total
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -20,7 +24,29 @@ function CartPage() {
         ).toLocaleString()}`
     )
     .join("\n");
+
   const whatsappMessage = `Hi, I want to complete my order:\n\n${cartSummary}\n\nTotal: KSh ${total.toLocaleString()}`;
+
+  /* -----------------------------
+     DELETE HANDLERS
+  ----------------------------- */
+  const handleDeleteClick = (item) => {
+    setItemToDelete(item);
+    setModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (itemToDelete) {
+      removeFromCart(itemToDelete.id);
+    }
+    setItemToDelete(null);
+    setModalOpen(false);
+  };
+
+  const handleCancelDelete = () => {
+    setItemToDelete(null);
+    setModalOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -35,7 +61,7 @@ function CartPage() {
             <span className="font-semibold text-gray-900">Shopping Cart</span>
           </div>
           <a
-            href="/"
+            href="/shop"
             className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold cursor-pointer"
           >
             <ArrowLeft size={20} />
@@ -63,7 +89,7 @@ function CartPage() {
               Add items to your cart to continue shopping
             </p>
             <a
-              href="/"
+              href="/shop"
               className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold cursor-pointer"
             >
               <ArrowLeft size={20} />
@@ -72,7 +98,7 @@ function CartPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Cart Items Section */}
+            {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {cart.map((item) => (
                 <div
@@ -82,7 +108,7 @@ function CartPage() {
                   <img
                     src={item.images?.[0]?.src}
                     alt={item.images?.[0]?.alt || item.name}
-                    className="w-20 h-20 object-contain bg-gray-50 rounded-lg flex-shrink-0"
+                    className="w-20 h-20 object-contain bg-gray-50 rounded-lg shrink-0"
                   />
 
                   <div className="flex-1 flex flex-col justify-between min-w-0">
@@ -97,7 +123,7 @@ function CartPage() {
                         </span>
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                            item.stock_status
+                            item.stock_status === "instock"
                               ? "bg-green-100 text-green-800"
                               : "bg-red-100 text-red-800"
                           }`}
@@ -121,7 +147,7 @@ function CartPage() {
                           −
                         </button>
 
-                        <span className="px-3 py-1  border-x-2 border-gray-300 font-semibold min-w-10 text-center">
+                        <span className="px-3 py-1 border-x-2 border-gray-300 font-semibold min-w-10 text-center">
                           {item.qty}
                         </span>
 
@@ -133,8 +159,9 @@ function CartPage() {
                         </button>
                       </div>
 
+                      {/* DELETE (NOW OPENS MODAL) */}
                       <button
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => handleDeleteClick(item)}
                         className="flex items-center gap-1 text-red-600 hover:text-red-700 font-semibold text-sm cursor-pointer"
                       >
                         <Trash2 size={14} /> Remove
@@ -145,10 +172,9 @@ function CartPage() {
               ))}
             </div>
 
-            {/* Order Summary Section */}
+            {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-lg shadow-sm p-6 sticky top-4 space-y-4">
-                {/* Contact Info */}
                 <div className="text-sm text-gray-700 space-y-1">
                   <div>Email: info@sarukdigital.co.ke</div>
                   <div>Phone: 0712345678</div>
@@ -166,6 +192,7 @@ function CartPage() {
                 <h2 className="text-lg font-bold text-gray-900 mt-4">
                   Order Summary
                 </h2>
+
                 <div className="space-y-2 pb-2 border-b">
                   <div className="flex justify-between text-gray-700">
                     <span>Subtotal ({cart.length} items)</span>
@@ -188,7 +215,6 @@ function CartPage() {
                   </span>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex flex-col gap-2 mt-4">
                   <button className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 font-bold text-sm cursor-pointer">
                     Proceed to Checkout
@@ -211,6 +237,15 @@ function CartPage() {
           </div>
         )}
       </div>
+
+      {/* CONFIRMATION MODAL */}
+      <ConfirmationModal
+        isOpen={modalOpen}
+        title="Remove Item"
+        message={`Are you sure you want to remove "${itemToDelete?.name}" from your cart?`}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   );
 }
