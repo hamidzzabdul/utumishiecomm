@@ -1,22 +1,15 @@
 import { useRef } from "react";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import {
-  ChevronLeft,
-  ChevronRight,
-  CircleCheckBig,
-  Heart,
-  ShoppingBag,
-  ShoppingCart,
-} from "lucide-react";
+import { CircleCheckBig, Heart, ShoppingCart } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { useCart } from "../context/CartContext.jsx";
 import { useWishlist } from "../context/WishlistContext";
-import { useProducts } from "../hooks/useProduct.js";
+import { useProductHome } from "../hooks/useProduct.js";
 import ProductSkeleton from "./ProductSkeleton.jsx";
 
 function truncate(text, maxLength = 50) {
@@ -24,22 +17,24 @@ function truncate(text, maxLength = 50) {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "...";
 }
+
 function CategorySlider({ category }) {
   const swiperRef = useRef(null);
   const { addToCart } = useCart();
   const { toggleWishlist, wishlist } = useWishlist();
 
-  const { data: products, isLoading } = useProducts({
+  // Fetch products for this category
+  const { data, isLoading } = useProductHome({
     category: category.id,
     per_page: 12,
   });
 
-  const filteredProducts = products?.filter((product) =>
-    product.categories?.some((cat) => cat.id === category.id)
-  );
+  // Ensure products is always an array
+  const products = Array.isArray(data?.products) ? data.products : [];
+  // const totalPages = data?.totalPages || 1;
 
   const handleAddToCart = (product) => {
-    if (product.stock_status) {
+    if (product.stock_status === "instock") {
       toast.success("Added to cart!");
       addToCart(product);
     } else {
@@ -81,10 +76,12 @@ function CategorySlider({ category }) {
                   <ProductSkeleton />
                 </SwiperSlide>
               ))
-            : filteredProducts?.map((product, index) => {
+            : products.map((product, index) => {
                 const isInWishlist = wishlist.some(
                   (item) => item.id === product.id
                 );
+                const category_slug =
+                  product?.categories?.[0]?.slug || "uncategorized";
 
                 return (
                   <SwiperSlide
@@ -93,7 +90,7 @@ function CategorySlider({ category }) {
                   >
                     {/* Image */}
                     <div className="w-full h-40 flex items-center justify-center relative overflow-hidden">
-                      <NavLink to={`/shop/${product.slug}`}>
+                      <NavLink to={`/shop/product/${product.slug}`}>
                         <img
                           src={product.images?.[0]?.src}
                           alt={product.images?.[0]?.alt || product.name}
@@ -127,7 +124,7 @@ function CategorySlider({ category }) {
                     </div>
 
                     {/* Details */}
-                    <NavLink to={`/shop/${product.slug}`}>
+                    <NavLink to={`/shop/product/${product.slug}`}>
                       <div className="p-2 flex flex-col gap-1">
                         <span className="text-gray-600 font-semibold">
                           SKU 00{index + 1}
@@ -135,6 +132,10 @@ function CategorySlider({ category }) {
                         <p className="text-sm h-10 overflow-hidden">
                           {truncate(product.name, 40)}
                         </p>
+                        <span className="text-blue-600 font-bold">
+                          Ksh{" "}
+                          {new Intl.NumberFormat("en-KE").format(product.price)}
+                        </span>
 
                         <div className="flex items-center gap-2">
                           <CircleCheckBig

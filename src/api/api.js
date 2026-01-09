@@ -14,12 +14,26 @@ const axiosInstance = axios.create({
 
 export const getProducts = async (params = {}) => {
   const response = await axiosInstance.get("/products", { params });
-  return response.data;
+
+  return {
+    products: response.data,
+    total: Number(response.headers["x-wp-total"]),
+    totalPages: Number(response.headers["x-wp-totalpages"]),
+  };
 };
 
 export const getProductById = async (id) => {
   const response = await axiosInstance.get(`/products/${id}`);
   return response.data;
+};
+
+export const getProductBySlug = async (slug) => {
+  // WooCommerce allows filtering by slug
+  const response = await axiosInstance.get("/products", {
+    params: { slug },
+  });
+  // WooCommerce returns an array, get the first item
+  return response.data[0];
 };
 
 export const getCategories = async () => {

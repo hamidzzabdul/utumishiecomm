@@ -2,6 +2,7 @@ import { ShoppingCart, Heart, CircleCheckBig, Info } from "lucide-react";
 import { useCart } from "../context/CartContext.jsx";
 import { useWishlist } from "../context/WishlistContext";
 import { toast } from "react-hot-toast";
+import { NavLink } from "react-router";
 
 // Utility function
 const truncate = (str, maxLength) => {
@@ -22,15 +23,18 @@ export const ProductCard = ({ product, index }) => {
     }
   };
 
+  const categoryName = product?.categories?.[0].name || "uncategorized";
   return (
     <div className="bg-white border border-blue-500 group overflow-hidden rounded-sm cursor-pointer">
       {/* IMAGE */}
       <div className="w-full flex items-center justify-center relative pt-3 h-32">
-        <img
-          src={product.images?.[0]?.src}
-          alt={product.images?.[0]?.alt || product.name}
-          className="w-37.5 object-contain"
-        />
+        <NavLink to={`/shop/product/${product.slug}`}>
+          <img
+            src={product.images?.[0]?.src}
+            alt={product.images?.[0]?.alt || product.name}
+            className="w-37.5 object-contain"
+          />
+        </NavLink>
 
         {/* Hover icons */}
         <div className="w-full flex items-center justify-center gap-3 absolute -bottom-4 opacity-0 group-hover:opacity-100 transition">
@@ -53,6 +57,7 @@ export const ProductCard = ({ product, index }) => {
           </div>
 
           {/* Toggle Wishlist */}
+
           <div
             className="w-8 h-8 rounded-full shadow bg-white flex items-center justify-center cursor-pointer border border-gray-300"
             onClick={() => toggleWishlist(product)}
@@ -74,44 +79,48 @@ export const ProductCard = ({ product, index }) => {
           </div>
         )}
       </div>
+      <NavLink to={`/shop/product/${product.slug}`}>
+        {/* CONTENT */}
+        <div className="px-3 pb-3 pt-2 flex flex-col ">
+          <div>
+            <span className="text-gray-600 font-medium text-xs">
+              {categoryName}
+            </span>
 
-      {/* CONTENT */}
-      <div className="px-3 pb-3 pt-2 flex flex-col ">
-        <div>
-          <span className="text-gray-600 font-medium text-xs">
-            SKU 00{index + 1}
-          </span>
+            {/* FIXED HEIGHT TITLE */}
+            <p className="text-sm text-gray-800 h-10 leading-tight overflow-hidden">
+              {truncate(product.name, 55)}
+            </p>
+          </div>
 
-          {/* FIXED HEIGHT TITLE */}
-          <p className="text-sm text-gray-800 h-10 leading-tight overflow-hidden">
-            {truncate(product.name, 55)}
-          </p>
+          {/* PRICE */}
+          <div className="text-blue-600 font-bold text-base">
+            Ksh{" "}
+            {new Intl.NumberFormat("en-KE").format(
+              product.price.toLocaleString()
+            )}
+          </div>
+
+          {/* STOCK */}
+          <div className="flex items-center gap-1">
+            {product.stock_status === "instock" ? (
+              <>
+                <CircleCheckBig size={14} className="text-green-500" />
+                <span className="text-gray-700 font-medium text-xs">
+                  In Stock
+                </span>
+              </>
+            ) : (
+              <>
+                <Info size={14} className="text-red-500" />
+                <span className="text-gray-700 font-medium text-xs">
+                  Sold Out
+                </span>
+              </>
+            )}
+          </div>
         </div>
-
-        {/* PRICE */}
-        <div className="text-blue-600 font-bold text-base">
-          KSh {product.price.toLocaleString()}
-        </div>
-
-        {/* STOCK */}
-        <div className="flex items-center gap-1">
-          {product.stock_status === "instock" ? (
-            <>
-              <CircleCheckBig size={14} className="text-green-500" />
-              <span className="text-gray-700 font-medium text-xs">
-                In Stock
-              </span>
-            </>
-          ) : (
-            <>
-              <Info size={14} className="text-red-500" />
-              <span className="text-gray-700 font-medium text-xs">
-                Sold Out
-              </span>
-            </>
-          )}
-        </div>
-      </div>
+      </NavLink>
     </div>
   );
 };

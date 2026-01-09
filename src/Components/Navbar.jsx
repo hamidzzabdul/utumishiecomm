@@ -1,12 +1,29 @@
 import { Heart, Menu, Search, ShoppingCart } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Categories from "./Categories";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
+import { useState } from "react";
 
 function Navbar() {
   const { cart } = useCart();
   const { wishlist } = useWishlist();
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    const trimmedSearch = searchTerm.trim();
+
+    // Don't search if empty
+    if (!trimmedSearch) return;
+
+    // Navigate to shop with search query
+    navigate(`/shop?search=${encodeURIComponent(trimmedSearch)}`);
+
+    // Clear the input field
+    setSearchTerm("");
+  };
 
   return (
     <div className="w-full flex flex-col sticky top-0 z-50 ">
@@ -24,9 +41,11 @@ function Navbar() {
       {/* Main Navbar */}
       <div className="w-full bg-white border-b border-b-gray-300">
         <div className="w-[95%] max-w-350 m-auto flex items-center justify-between p-3 ">
-          <h1 className="text-2xl font-bold text-blue-600">
-            Utumishi Computers
-          </h1>
+          <NavLink to="/">
+            <h1 className="text-2xl font-bold text-blue-600">
+              Utumishi Computers
+            </h1>
+          </NavLink>
 
           {/* Search Bar */}
           <div className="w-[30%] h-9 border-gray-500 border hidden md:flex items-center justify-between overflow-hidden ">
@@ -36,9 +55,15 @@ function Navbar() {
             <input
               type="text"
               placeholder="Search products"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               className="w-[80%] outline-none px-2 placeholder:text-sm"
             />
-            <div className="h-full px-3 text-white bg-blue-500 cursor-pointer text-sm flex items-center justify-center">
+            <div
+              className="h-full px-3 text-white bg-blue-500 cursor-pointer text-sm flex items-center justify-center"
+              onClick={handleSearch}
+            >
               Search
             </div>
           </div>
