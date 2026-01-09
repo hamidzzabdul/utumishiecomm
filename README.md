@@ -163,23 +163,6 @@ utumishi-computers/
 5. Copy the Consumer Key and Consumer Secret
 6. Add them to your `.env` file
 
-### Tailwind CSS Configuration
-
-The project uses custom Tailwind configuration for brand colors and utilities. Modify `tailwind.config.js` to customize:
-
-```js
-theme: {
-  extend: {
-    colors: {
-      // Add your custom colors
-    },
-    maxWidth: {
-      '350': '1400px', // Custom max-width
-    }
-  }
-}
-```
-
 ## 📱 Features Breakdown
 
 ### Client-Side Search
@@ -221,7 +204,7 @@ theme: {
 Update the gradient colors in components:
 
 ```jsx
-className = "bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600";
+className = "bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600";
 ```
 
 ### Product Display
@@ -270,11 +253,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-**Utumishi Computers Limited**
-
-- Website: [utumishicomputer.co.ke](https://utumishicomputer.co.ke)
-- Email: info@utumishicomputer.co.ke
-- Phone: 0706 328 544
+- Website: [utumishicomputer.co.ke](https://utumishicomputer.co.ke) Not Yet deployed
+- Email: abdirahimabdul89@gmail.com
 - Location: Nairobi CBD, Moi Avenue, Kenya
 
 ## 🙏 Acknowledgments
@@ -285,10 +265,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Lucide Icons](https://lucide.dev/)
 - [Swiper.js](https://swiperjs.com/)
 
-## 📊 Project Status
-
-🚀 **Active Development** - This project is actively maintained and new features are being added regularly.
-
 ---
 
-Made with ❤️ by Utumishi Computers Limited
+Made with ❤️ by Hamidzzabdul

@@ -5,6 +5,8 @@ import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useState } from "react";
 
+import logo from "../assets/logo.png";
+
 function Navbar() {
   const { cart } = useCart();
   const { wishlist } = useWishlist();
@@ -48,9 +50,13 @@ function Navbar() {
       <div className="w-full bg-white border-b border-b-gray-300">
         <div className="w-[95%] max-w-350 m-auto flex items-center justify-between p-3 ">
           <NavLink to="/">
-            <h1 className="text-2xl font-bold text-blue-600">
-              Utumishi Computers
-            </h1>
+            <div className="w-25 ">
+              <img
+                src={logo}
+                alt="utumishi logo"
+                className="w-full object-contain"
+              />
+            </div>
           </NavLink>
 
           {/* Search Bar */}

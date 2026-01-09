@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { ShoppingCart, MessageCircle } from "lucide-react";
 import { useProductBySlug } from "../hooks/useProduct";
 import { useCart } from "../context/CartContext";
@@ -49,8 +49,20 @@ function ProductDetailsPage() {
     <div className="min-h-screen bg-gray-50 py-6 px-3 md:px-6">
       <div className="max-w-6xl mx-auto">
         {/* Breadcrumb */}
-        <div className="text-xs text-gray-600 mb-4 truncate">
-          Home / {product.categories?.[0]?.name || "Category"} / {product.name}
+        <div className="text-xs text-gray-600 mb-4 truncate flex items-center gap-1">
+          <NavLink to="/" className="hover:text-blue-600 transition-colors">
+            Home
+          </NavLink>
+
+          <span>/</span>
+
+          <NavLink to="/shop" className="hover:text-blue-600 transition-colors">
+            shop
+          </NavLink>
+          <span>/</span>
+          <span className="font-semibold text-gray-900 truncate">
+            {product.name}
+          </span>
         </div>
 
         <div className="bg-white rounded-md shadow-sm p-4 md:p-6">

@@ -224,11 +224,11 @@ function ShopPage() {
 
         {/* PAGINATION */}
         {totalPages > 1 && !isLoading && (
-          <div className="flex justify-center gap-4 py-4">
+          <div className="flex justify-center items-center gap-4 py-4">
             <button
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
+              className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer disabled:bg-gray-300"
             >
               Previous
             </button>
@@ -240,7 +240,7 @@ function ShopPage() {
             <button
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
+              className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer disabled:bg-gray-300"
             >
               Next
             </button>
