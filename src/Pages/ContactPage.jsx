@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
+import toast from "react-hot-toast";
 
 function ContactUs() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ function ContactUs() {
     message: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -19,21 +22,28 @@ function ContactUs() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
-    alert("Thank you for contacting us! We'll get back to you soon.");
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: "",
-    });
+    setLoading(true);
+
+    // Simulate form submission
+    setTimeout(() => {
+      toast.success("Submitted successfully!");
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+
+      setLoading(false);
+    }, 800);
   };
 
   return (
     <div className="w-full bg-gray-50">
       {/* Hero Section */}
-      <div className="w-full bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600">
+      <div className="w-full bg-linear-to-r from-purple-500 via-pink-500 to-red-500">
         <div className="max-w-350 mx-auto px-4 py-16">
           <div className="text-center text-white">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Contact Us</h1>
@@ -64,11 +74,7 @@ function ContactUs() {
               <Phone className="w-7 h-7 text-blue-600" />
             </div>
             <h3 className="font-bold text-gray-900 mb-2">Call Us</h3>
-            <p className="text-sm text-gray-600">
-              0706 328 544
-              <br />
-              0706 328 544
-            </p>
+            <p className="text-sm text-gray-600">0799 224 540</p>
           </div>
 
           <div className="bg-white p-6 rounded-xl shadow-md text-center">
@@ -76,7 +82,7 @@ function ContactUs() {
               <Mail className="w-7 h-7 text-blue-600" />
             </div>
             <h3 className="font-bold text-gray-900 mb-2">Email Us</h3>
-            <p className="text-sm text-gray-600">info@utumishicomputer.co.ke</p>
+            <p className="text-sm text-gray-600">utumishicomputers@gmail.com</p>
           </div>
 
           <div className="bg-white p-6 rounded-xl shadow-md text-center">
@@ -92,132 +98,94 @@ function ContactUs() {
           </div>
         </div>
 
-        {/* Contact Form */}
+        {/* Contact Form + Info */}
         <div className="grid lg:grid-cols-2 gap-12 pb-16">
+          {/* Form */}
           <div className="bg-white p-8 rounded-xl shadow-md">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
               Send us a Message
             </h2>
+
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="John Doe"
-                />
-              </div>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                placeholder="Full Name *"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="john@example.com"
-                />
-              </div>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                placeholder="Email Address *"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="0712 345 678"
-                />
-              </div>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Phone Number"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Subject *
-                </label>
-                <input
-                  type="text"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="How can we help?"
-                />
-              </div>
+              <input
+                type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                placeholder="Subject *"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Message *
-                </label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows="5"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                  placeholder="Tell us more about your inquiry..."
-                />
-              </div>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows="5"
+                placeholder="Your message *"
+                className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-blue-500"
+              />
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold flex items-center justify-center gap-2 transition-colors"
+                disabled={loading}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
               >
-                Send Message
+                {loading ? "Submitting..." : "Send Message"}
                 <Send size={18} />
               </button>
             </form>
           </div>
 
+          {/* Side Info */}
           <div className="space-y-6">
             <div className="bg-white p-8 rounded-xl shadow-md">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Customer Support
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Our customer support team is available to help you with any
-                questions about products, orders, or technical issues.
-              </p>
+              <h3 className="text-xl font-bold mb-4">Customer Support</h3>
               <p className="text-gray-600">
                 We typically respond within 24 hours during business days.
               </p>
             </div>
 
             <div className="bg-white p-8 rounded-xl shadow-md">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Visit Our Store
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Come see our products in person at our Nairobi location. Our
-                friendly staff will be happy to assist you.
-              </p>
-              <p className="text-sm text-blue-600 font-medium">
-                Free parking available
+              <h3 className="text-xl font-bold mb-4">Visit Our Store</h3>
+              <p className="text-gray-600">
+                Visit us in Nairobi CBD for in-person assistance.
               </p>
             </div>
 
             <div className="bg-linear-to-br from-blue-50 to-indigo-50 p-8 rounded-xl">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Need Immediate Help?
-              </h3>
-              <p className="text-gray-700 mb-4">
-                For urgent matters, please call us directly at:
-              </p>
-              <p className="text-2xl font-bold text-blue-600">0706 328 544</p>
+              <h3 className="text-xl font-bold mb-4">Need Immediate Help?</h3>
+              <p className="text-2xl font-bold text-blue-600">0799 224 540</p>
             </div>
           </div>
         </div>

@@ -25,19 +25,19 @@ export const ProductCard = ({ product, index }) => {
 
   const categoryName = product?.categories?.[0].name || "uncategorized";
   return (
-    <div className="bg-white border border-blue-500 group overflow-hidden rounded-sm cursor-pointer">
+    <div className="bg-white border border-blue-500 group overflow-hidden rounded-sm cursor-pointer ">
       {/* IMAGE */}
-      <div className="w-full flex items-center justify-center relative pt-3 h-32">
+      <div className="w-full flex items-center justify-center relative pt-3 h-40 ">
         <NavLink to={`/shop/product/${product.slug}`}>
           <img
             src={product.images?.[0]?.src}
             alt={product.images?.[0]?.alt || product.name}
-            className="w-37.5 object-contain"
+            className="w-37.5 h-37.5 object-contain"
           />
         </NavLink>
 
         {/* Hover icons */}
-        <div className="w-full flex items-center justify-center gap-3 absolute -bottom-4 opacity-0 group-hover:opacity-100 transition">
+        <div className="w-full flex items-center justify-center gap-3 absolute -bottom-4 opacity-0 group-hover:opacity-100 transition ">
           {/* Add to Cart */}
           <div
             className={`w-9 h-9 rounded-full shadow bg-white flex items-center justify-center cursor-pointer border border-gray-300 ${
@@ -81,7 +81,7 @@ export const ProductCard = ({ product, index }) => {
       </div>
       <NavLink to={`/shop/product/${product.slug}`}>
         {/* CONTENT */}
-        <div className="px-3 pb-3 pt-2 flex flex-col ">
+        <div className="px-3 pb-2 pt-3 flex flex-col ">
           <div>
             <span className="text-gray-600 font-medium text-xs">
               {categoryName}

@@ -6,23 +6,24 @@ import { CategoryData } from "../utils/data";
 
 function Categories() {
   return (
-    <div className="w-[95%] mx-auto">
+    <div className="w-[98%] xs:w-[95%] mx-auto">
       <Swiper
-        spaceBetween={10}
-        slidesPerView={2} // default for very small screens
+        spaceBetween={6}
+        slidesPerView={10} // default for very small screens
         breakpoints={{
+          300: { slidesPerView: 4 },
           480: { slidesPerView: 4 },
           640: { slidesPerView: 4 },
           768: { slidesPerView: 5 },
           1024: { slidesPerView: 7 },
           1280: { slidesPerView: 10 },
         }}
-        className="w-full h-20 mt-2"
+        className="w-full h-25 mt-2"
       >
         {CategoryData.map((cat) => (
           <SwiperSlide
             key={cat.id}
-            className="cursor-pointer overflow-hidden relative"
+            className="cursor-pointer overflow-hidden relative group"
           >
             <Link
               to={`/shop/${cat.name.toLowerCase().replace(/\s+/g, "-")}`}
@@ -33,7 +34,7 @@ function Categories() {
                 alt={cat.name}
                 className="h-[70%] w-full object-cover"
               />
-              <div className="absolute bottom-0 bg-black/70 flex items-center justify-center text-center w-full h-[30%]">
+              <div className="absolute bottom-0 bg-black/70 group-hover:bg-black transition duration-300  flex items-center justify-center text-center w-full h-[30%]">
                 <span className="text-white text-[.7rem] px-1 truncate">
                   {cat.name}
                 </span>

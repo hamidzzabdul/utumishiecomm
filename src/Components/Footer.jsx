@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Facebook,
-  Twitter,
   Instagram,
   Youtube,
   Mail,
@@ -12,6 +11,8 @@ import {
   Shield,
   Headphones,
 } from "lucide-react";
+import { FaInstagram, FaTiktok } from "react-icons/fa";
+
 import { NavLink } from "react-router";
 
 import { CategoryData } from "../utils/data";
@@ -86,28 +87,16 @@ function Footer() {
             </p>
             <div className="flex gap-3">
               <NavLink
-                to="#"
+                to="https://www.tiktok.com/@utumishi_computers_ltd"
                 className="bg-gray-800 hover:bg-blue-600 p-2 rounded-full transition-colors duration-200"
               >
-                <Facebook className="w-5 h-5" />
+                <FaTiktok className="w-5 h-5" />
               </NavLink>
               <NavLink
-                to="#"
+                to="https://www.instagram.com/utumishi_computers_ltd?igsh=MXczNWd4c2psbzd5dA%3D%3D&utm_source=qr"
                 className="bg-gray-800 hover:bg-blue-600 p-2 rounded-full transition-colors duration-200"
               >
-                <Twitter className="w-5 h-5" />
-              </NavLink>
-              <NavLink
-                to="#"
-                className="bg-gray-800 hover:bg-blue-600 p-2 rounded-full transition-colors duration-200"
-              >
-                <Instagram className="w-5 h-5" />
-              </NavLink>
-              <NavLink
-                to="#"
-                className="bg-gray-800 hover:bg-blue-600 p-2 rounded-full transition-colors duration-200"
-              >
-                <Youtube className="w-5 h-5" />
+                <FaInstagram className="w-5 h-5" />
               </NavLink>
             </div>
           </div>
@@ -179,16 +168,16 @@ function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                 <span className="text-sm">
-                  123 Tech Street, Silicon Valley, CA 94025
+                  Jamia Mall Nairobi, Shop number G33
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-blue-400 shrink-0" />
-                <span className="text-sm">+1 (555) 123-4567</span>
+                <span className="text-sm">+254 799-224-540</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-blue-400 shrink-0" />
-                <span className="text-sm">support@techstore.com</span>
+                <span className="text-sm">utumishicomputers@gmail.com</span>
               </li>
             </ul>
           </div>

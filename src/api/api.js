@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://utumishicomputerslimited.com/wp-json/wc/v3";
+const BASE_URL = "https://utumishicomputerslimited.com/wp/wp-json/wc/v3";
 const CONSUMER_KEY = import.meta.env.VITE_WC_KEY;
 const CONSUMER_SECRET = import.meta.env.VITE_WC_SECRET;
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Trash2, MessageCircle, ShoppingBag, ArrowLeft } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import ConfirmationModal from "../Components/ConfirmationModal";
+import toast from "react-hot-toast";
 
 function CartPage() {
   const { cart, removeFromCart, updateQuantity } = useCart();
@@ -11,11 +12,9 @@ function CartPage() {
   const [itemToDelete, setItemToDelete] = useState(null);
 
   // Subtotal, shipping, total
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const shipping = subtotal > 0 ? 500 : 0;
-  const total = subtotal + shipping;
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
-  const whatsappNumber = "0712345678";
+  const whatsappNumber = "254799224540";
   const cartSummary = cart
     .map(
       (item) =>
@@ -41,6 +40,7 @@ function CartPage() {
     }
     setItemToDelete(null);
     setModalOpen(false);
+    toast.success(`${itemToDelete.name} was deleted successfuly`);
   };
 
   const handleCancelDelete = () => {
@@ -176,14 +176,10 @@ function CartPage() {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-lg shadow-sm p-6 sticky top-4 space-y-4">
                 <div className="text-sm text-gray-700 space-y-1">
-                  <div>Email: info@sarukdigital.co.ke</div>
-                  <div>Phone: 0712345678</div>
-                  <div>Projector Spot: 0712345678</div>
-                  <div>WhatsApp: 0712345678</div>
-                  <div>
-                    Nairobi, Kimathi Street, Old Mutual Building, 2nd Floor Room
-                    211A
-                  </div>
+                  <div>Email: info@utumishicomputerslimited.com</div>
+                  <div>Phone: 0799 224 540</div>
+                  <div>WhatsApp: 0799 224 540</div>
+                  <div>Nairobi, jamia Mall shop G33</div>
                   <div className="text-xs text-gray-400 mt-2">
                     NB: Prices Are VAT Exclusive
                   </div>
@@ -197,13 +193,7 @@ function CartPage() {
                   <div className="flex justify-between text-gray-700">
                     <span>Subtotal ({cart.length} items)</span>
                     <span className="font-semibold">
-                      KSh {subtotal.toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-gray-700">
-                    <span>Shipping</span>
-                    <span className="font-semibold">
-                      KSh {shipping.toLocaleString()}
+                      KSh {total.toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -216,10 +206,6 @@ function CartPage() {
                 </div>
 
                 <div className="flex flex-col gap-2 mt-4">
-                  <button className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 font-bold text-sm cursor-pointer">
-                    Proceed to Checkout
-                  </button>
-
                   <a
                     href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
                       whatsappMessage

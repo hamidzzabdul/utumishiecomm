@@ -52,7 +52,7 @@ function AboutUs() {
   return (
     <div className="w-full max-w-350 mx-auto bg-gray-50">
       {/* Hero Section */}
-      <div className="w-full bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600">
+      <div className="w-full bg-linear-to-r from-purple-500 via-pink-500 to-red-500">
         <div className="max-w-350 mx-auto px-4 py-16 md:py-24">
           <div className="text-center text-white">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -60,7 +60,7 @@ function AboutUs() {
             </h1>
             <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90">
               Your trusted partner for premium computers, laptops, accessories,
-              and technology solutions in Kenya since 2014.
+              and technology solutions in Kenya.
             </p>
           </div>
         </div>
@@ -164,7 +164,7 @@ function AboutUs() {
               <MapPin className="w-8 h-8 mb-3" />
               <h3 className="font-bold mb-2">Visit Us</h3>
               <p className="text-sm opacity-90">
-                Nairobi CBD, Moi Avenue
+                Nairobi CBD, Jamia Mall Shop Number G33
                 <br />
                 Kenya
               </p>
@@ -174,25 +174,25 @@ function AboutUs() {
               <Phone className="w-8 h-8 mb-3" />
               <h3 className="font-bold mb-2">Call Us</h3>
               <p className="text-sm opacity-90">
-                0706 328 544
+                0799 224 540
                 <br />
-                0706 328 544
+                0799 224 540
               </p>
             </div>
 
             <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl text-white">
               <Mail className="w-8 h-8 mb-3" />
               <h3 className="font-bold mb-2">Email Us</h3>
-              <p className="text-sm opacity-90">info@utumishicomputer.co.ke</p>
+              <p className="text-sm opacity-90">utumishicomputers@gmail.com</p>
             </div>
 
             <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl text-white">
               <Clock className="w-8 h-8 mb-3" />
               <h3 className="font-bold mb-2">Working Hours</h3>
               <p className="text-sm opacity-90">
-                Mon - Sat: 8AM - 7PM
+                Mon - Sat: 8AM - 5pM
                 <br />
-                Sunday: 10AM - 4PM
+                Sunday: 9AM - 4PM
               </p>
             </div>
           </div>

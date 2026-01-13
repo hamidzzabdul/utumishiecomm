@@ -12,7 +12,7 @@ function ProductDetailsPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  const whatsappNumber = "254712345678";
+  const whatsappNumber = "254799224540";
   const whatsappMessage = product
     ? `Hi, I'm interested in purchasing the ${product.name} (KSh ${Number(
         product.price

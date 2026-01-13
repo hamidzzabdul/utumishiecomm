@@ -45,7 +45,7 @@ function CategorySlider({ category }) {
   return (
     <div className="w-full mt-2 bg-white pb-2 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-3 py-2 bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600">
+      <div className="flex items-center justify-between px-3 py-2 bg-linear-to-r from-purple-500 via-pink-500 to-red-500">
         <h2 className="text-xl font-semibold text-white">{category.name}</h2>
         <NavLink
           to={`/shop/${category.slug}`}
@@ -99,7 +99,7 @@ function CategorySlider({ category }) {
                       </NavLink>
 
                       {/* Actions */}
-                      <div className="absolute bottom-2 flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                      <div className="absolute bottom-2 flex gap-2 sm:opacity-0 group-hover:opacity-100 transition">
                         <div
                           className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center"
                           onClick={() => handleAddToCart(product)}

@@ -22,7 +22,7 @@ function Hero() {
   return (
     <div className="w-full flex items-center justify-between mt-2 gap-2 ">
       {/* LEFT SLIDER */}
-      <div className="w-[15%]  h-85 hidden md:block">
+      <div className="w-[15%] h-85 hidden md:block">
         <Swiper spaceBetween={0} slidesPerView={1} className="w-full h-full">
           <SwiperSlide>
             <img src={hero1} className="w-full h-full object-cover" />
@@ -37,7 +37,7 @@ function Hero() {
       </div>
 
       {/* CENTER SLIDER WITH CUSTOM NAV BUTTONS */}
-      <div className="w-full md:w-[70%]  h-95 md:h-85 relative overflow-hidden">
+      <div className="w-full md:w-[70%] h-64 sm:h-80 md:h-85 relative overflow-hidden rounded-lg">
         <Swiper
           spaceBetween={0}
           slidesPerView={1}
@@ -46,46 +46,37 @@ function Hero() {
           className="w-full h-full"
         >
           <SwiperSlide>
-            <img
-              src={hero21}
-              className="w-full h-full object-cover object-right"
-            />
+            <img src={hero21} className="w-full h-full object-cover" />
           </SwiperSlide>
           <SwiperSlide>
-            <img
-              src={hero22}
-              className="w-full h-full object-cover object-center"
-            />
+            <img src={hero22} className="w-full h-full object-cover" />
           </SwiperSlide>
           <SwiperSlide>
-            <img
-              src={hero23}
-              className="w-full h-full object-cover object-right"
-            />
+            <img src={hero23} className="w-full h-full object-cover" />
           </SwiperSlide>
         </Swiper>
 
         {/* PREV BUTTON */}
         <button
           onClick={() => swiperRef.current?.slidePrev()}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+          className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-1.5 md:p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="w-6 h-6 text-gray-800" />
+          <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
         </button>
 
         {/* NEXT BUTTON */}
         <button
           onClick={() => swiperRef.current?.slideNext()}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-1.5 md:p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
           aria-label="Next slide"
         >
-          <ChevronRight className="w-6 h-6 text-gray-800" />
+          <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
         </button>
       </div>
 
       {/* RIGHT SLIDER */}
-      <div className="w-[15%]  h-85 hidden md:block">
+      <div className="w-[15%] h-85 hidden md:block">
         <Swiper spaceBetween={0} slidesPerView={1} className="w-full h-full">
           <SwiperSlide>
             <img src={hero31} className="w-full h-full object-cover" />
